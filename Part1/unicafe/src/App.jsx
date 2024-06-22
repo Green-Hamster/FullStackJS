@@ -6,12 +6,31 @@ const Button = (props) => (
   </button>
 )
 
-const Statistics = (props) => {
+const StatisticLine = (props) => {
   return (
     <div>
-      {props.type}: {props.count}
+      {props.text}: {props.count}
     </div>
   )
+}
+
+const Statistics = (props) => {
+  if (props.good == 0 && props.neutral ==0 && props.bad == 0) {
+    return (
+      <div> No feedback given</div>
+    )
+  } else {
+  return (
+  <div>
+      <StatisticLine text='good' count={props.good} />
+      <StatisticLine text='neutral' count={props.neutral} />
+      <StatisticLine text='bad' count={props.bad} />
+      <StatisticLine text='Total' count={props.good+props.neutral+props.bad} />
+      <StatisticLine text='Average' count={(props.good-props.bad)/(props.good+props.neutral+props.bad)} />
+      <StatisticLine text='Positive' count={100/(props.good+props.neutral+props.bad)*props.good} />
+  </div>
+  )
+}
 }
 
 const Header = (props) => {
@@ -40,12 +59,7 @@ const App = () => {
       <Button handleClick={()=>setNeutral(neutral+1)}text='neutral' />
       <Button handleClick={()=>setBad(bad+1)} text='bad' />
       <Header headerValue={statHeader} />
-      <Statistics type='good' count={good} />
-      <Statistics type='neutral' count={neutral} />
-      <Statistics type='bad' count={bad} />
-      Total: {good+neutral+bad}<br />
-      Average: {(good-bad)/(good+neutral+bad)}<br />
-      Positive: {100/(good+neutral+bad)*good}
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
