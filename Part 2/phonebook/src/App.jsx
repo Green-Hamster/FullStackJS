@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-const DisplayName = ({name}) => {
+const DisplayName = ({name, number}) => {
   return (
     <div>
-      {name}
+      {name} {number}
     </div>
   )
 }
@@ -29,6 +29,7 @@ const App = () => {
     { id:1, name: 'Arto Hellas' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -39,17 +40,26 @@ const App = () => {
     } else {
     const personObject = {
       name: newName,
+      number: newNumber,
       id: persons.length + 1
     }
     setPersons(persons.concat(personObject))
     setNewName('')
+    setNewNumber('')
   }
   }
 
   const handlePersonChange = (event) => {
-    console.log('target value', event.target.value);
+    console.log('name target value', event.target.value);
     setNewName(event.target.value)
   }
+
+  
+  const handleNumberChange = (event) => {
+    console.log('number target value', event.target.value)
+    setNewNumber(event.target.value)
+  }
+
 
   return (
     <div>
@@ -62,13 +72,19 @@ const App = () => {
           />
         </div>
         <div>
+          number: <input 
+          value={newNumber}
+          onChange={handleNumberChange}
+          />
+        </div>
+        <div>
           <Button />
         </div>
       </form>
       <HeaderH2 text='Numbers' />
       {
         persons.map(person =>
-          <DisplayName key={person.id} name={person.name} />
+          <DisplayName key={person.id} name={person.name} number={person.number} />
         )
       }
     </div>
