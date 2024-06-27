@@ -8,6 +8,22 @@ const DisplayName = ({name}) => {
   )
 }
 
+const HeaderH2 = (props) => {
+  console.log('header props: ', props)
+  return (
+    <div>
+      <h1> {props.text} </h1>
+    </div>
+  )
+}
+
+const Button =  (props) => {
+  return (
+    <button type="submit">add</button>
+  )
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([
     { id:1, name: 'Arto Hellas' }
@@ -17,12 +33,17 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target);
+    const checkName = (element) => element.name === newName;
+    if (persons.some(checkName)) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
     const personObject = {
       name: newName,
       id: persons.length + 1
     }
     setPersons(persons.concat(personObject))
     setNewName('')
+  }
   }
 
   const handlePersonChange = (event) => {
@@ -41,13 +62,13 @@ const App = () => {
           />
         </div>
         <div>
-          <button type="submit">add</button>
+          <Button />
         </div>
       </form>
-      <h2>Numbers</h2>
+      <HeaderH2 text='Numbers' />
       {
         persons.map(person =>
-          <DisplayName name={person.name} />
+          <DisplayName key={person.id} name={person.name} />
         )
       }
     </div>
