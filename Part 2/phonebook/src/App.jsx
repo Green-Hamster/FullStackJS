@@ -1,54 +1,36 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import Button from './components/Button'
+import HeaderH1 from './components/HeaderH1'
+import HeaderH2 from './components/HeaderH2'
 
 
-const DisplayName = ({id, name, number, setPersons}) => {
-  const delPerson = () => {
+
+const DisplayName = ({id, name, number, setPersons, persons}) => {
+  const delPerson = (id) => {
     if (window.confirm(`Delete ${name}?`)) {
     personService.deletePerson(id)
-    }
+    .then(response => {
+      setPersons(persons.filter((person) => person.id !== response.data.id))
+    })
   }
-
+}
+  
   return (
     <div>
-      {name} {number} <Button handleClick={delPerson} text='delete'/>
+      {name} {number} <Button handleClick={() => delPerson(id)} text='delete'/>
     </div>
   )
 }
 
 
 const DisplayAll = ({setPersons, persons, filter}) => {
-  const filtredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter))
+  const filteredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter))
   return (
-    filtredPersons.map(person =>
-    <DisplayName key={person.id} id={person.id} name={person.name} number={person.number} setPersons={setPersons} />
+    filteredPersons.map(person =>
+    <DisplayName key={person.id} id={person.id} name={person.name} number={person.number} setPersons={setPersons} persons={filteredPersons} />
   )
 )
-}
-
-
-const HeaderH1 = (props) => {
-  return (
-    <div>
-      <h1> {props.text} </h1>
-    </div>
-  )
-}
-
-
-const HeaderH2 = (props) => {
-  return (
-    <div>
-      <h2> {props.text} </h2>
-    </div>
-  )
-}
-
-
-const Button = ({handleClick, type, text}) => {
-  return (
-    <button onClick={handleClick} type={type}>{text}</button>
-  )
 }
 
 
@@ -107,14 +89,11 @@ const App = () => {
   // Define functions
   const addPerson = (event) => {
     event.preventDefault()
-    console.log('button clicked', event.target);
     const checkPerson = (element) => {
       return element.name === newName && element.number === newNumber
 
     };
     const checkNumber = (element) => {
-      console.log('comapre name', element.name === newName);
-      console.log('comapre number', element.number != newNumber);
       return element.name === newName && element.number != newNumber
     };
     if (persons.some(checkPerson)) {
@@ -124,17 +103,13 @@ const App = () => {
       console.log('changingPerson', changingPerson);
       if (window.confirm(`${changingPerson.name} is already added to phonebook, replace the old number with a new one?`))
       changingPerson.number = newNumber
-      console.log('personObject', changingPerson);
       personService.changeNumber(changingPerson)
       setNewName('')
       setNewNumber('')
-
-
     } else {
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
+      number: newNumber
     }
     personService.create(personObject).then(response => {
       setPersons(persons.concat(response.data))
