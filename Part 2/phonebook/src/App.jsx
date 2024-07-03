@@ -3,6 +3,7 @@ import personService from './services/persons'
 import Button from './components/Button'
 import HeaderH1 from './components/HeaderH1'
 import HeaderH2 from './components/HeaderH2'
+import './index.css'
 
 
 
@@ -71,12 +72,27 @@ const FilterForm = ({filterName, handleFilterName}) => {
 }
 
 
+const Notification = ({className, message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={className}>
+      {message}
+    </div>
+  )
+}
+
+
 const App = () => {
   // Define states
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [message, setMessage] = useState('some error happened...')
+  const [typeMessage, setTypeMessage] = useState('')
 
  const hook = () => {
     personService.getAll().then(response => {
@@ -106,6 +122,12 @@ const App = () => {
       personService.changeNumber(changingPerson)
       setNewName('')
       setNewNumber('')
+      setMessage(`${changingPerson.name} number replace succesfull!`)
+      setTypeMessage('success')
+      setTimeout(() => {
+        setMessage(null);
+        setTypeMessage(null)
+      }, 5000)
     } else {
     const personObject = {
       name: newName,
@@ -115,6 +137,12 @@ const App = () => {
       setPersons(persons.concat(response.data))
       setNewName('')
       setNewNumber('')
+      setMessage(`Added ${response.data.name}`)
+      setTypeMessage('success')
+      setTimeout(() => {
+        setMessage(null);
+        setTypeMessage(null)
+      }, 5000)
       })
     }
   }
@@ -142,6 +170,7 @@ const App = () => {
   return (
     <div>
       <HeaderH1 text='Phonebook' />
+      <Notification className={typeMessage} message={message} /> 
       <FilterForm
       filterName={filterName}
       handleFilterName={handleFilterName}
