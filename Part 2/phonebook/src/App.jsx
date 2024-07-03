@@ -1,29 +1,33 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-const baseUrl = 'http://localhost:3001/persons'
+import personService from './services/persons'
 
 
-const DisplayName = ({name, number}) => {
+const DisplayName = ({id, name, number, setPersons}) => {
+  const delPerson = () => {
+    if (window.confirm(`Delete ${name}?`)) {
+    personService.deletePerson(id)
+    }
+  }
+
   return (
     <div>
-      {name} {number}
+      {name} {number} <Button handleClick={delPerson} text='delete'/>
     </div>
   )
 }
 
 
-const DisplayAll = ({persons, filter}) => {
+const DisplayAll = ({setPersons, persons, filter}) => {
   const filtredPersons = persons.filter((person) => person.name.toLowerCase().includes(filter))
   return (
     filtredPersons.map(person =>
-    <DisplayName key={person.id} name={person.name} number={person.number} />
+    <DisplayName key={person.id} id={person.id} name={person.name} number={person.number} setPersons={setPersons} />
   )
 )
 }
 
 
 const HeaderH1 = (props) => {
-  console.log('header props: ', props)
   return (
     <div>
       <h1> {props.text} </h1>
@@ -33,7 +37,6 @@ const HeaderH1 = (props) => {
 
 
 const HeaderH2 = (props) => {
-  console.log('header props: ', props)
   return (
     <div>
       <h2> {props.text} </h2>
@@ -42,9 +45,9 @@ const HeaderH2 = (props) => {
 }
 
 
-const Button = (props) => {
+const Button = ({handleClick, type, text}) => {
   return (
-    <button type="submit">add</button>
+    <button onClick={handleClick} type={type}>{text}</button>
   )
 }
 
@@ -65,7 +68,7 @@ const PersonForm = ({addPerson, newName, handlePersonChange, newNumber, handleNu
       />
     </div>
     <div>
-      <Button />
+      <Button type='Submit' text='add' />
     </div>
   </form>
   )
@@ -94,9 +97,7 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
 
  const hook = () => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then(response => {
-      console.log('promise fulfilled')
+    personService.getAll().then(response => {
       setPersons(response.data)
     })
   }
@@ -117,14 +118,14 @@ const App = () => {
       id: persons.length + 1
     }
 
-    axios.post(baseUrl, personObject)
-    .then(response => {
+    personService.create(personObject).then(response => {
       setPersons(persons.concat(response.data))
       setNewName('')
       setNewNumber('')
       })
     }
   }
+
 
   // Define handlers
   const handlePersonChange = (event) => {
@@ -158,7 +159,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <HeaderH1 text='Numbers' />
-      <DisplayAll persons={persons} filter={filterName} />
+      <DisplayAll setPersons={setPersons} persons={persons} filter={filterName} />
     </div>
   )
 }
