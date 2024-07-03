@@ -108,16 +108,34 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target);
-    const checkName = (element) => element.name === newName;
-    if (persons.some(checkName)) {
+    const checkPerson = (element) => {
+      return element.name === newName && element.number === newNumber
+
+    };
+    const checkNumber = (element) => {
+      console.log('comapre name', element.name === newName);
+      console.log('comapre number', element.number != newNumber);
+      return element.name === newName && element.number != newNumber
+    };
+    if (persons.some(checkPerson)) {
       alert(`${newName} is already added to phonebook`)
+    } else if (persons.some(checkNumber)) {
+      const changingPerson = persons.find(item => item.name == newName)
+      console.log('changingPerson', changingPerson);
+      if (window.confirm(`${changingPerson.name} is already added to phonebook, replace the old number with a new one?`))
+      changingPerson.number = newNumber
+      console.log('personObject', changingPerson);
+      personService.changeNumber(changingPerson)
+      setNewName('')
+      setNewNumber('')
+
+
     } else {
     const personObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
     }
-
     personService.create(personObject).then(response => {
       setPersons(persons.concat(response.data))
       setNewName('')
@@ -125,6 +143,9 @@ const App = () => {
       })
     }
   }
+
+
+  useEffect(hook, [])
 
 
   // Define handlers
