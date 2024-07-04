@@ -1,16 +1,6 @@
 {
   "persons": [
     {
-      "id": "075f",
-      "name": "Galadriel",
-      "number": "79991234567"
-    },
-    {
-      "id": "26ff",
-      "name": "Arto Hellas",
-      "number": "+79991234560"
-    },
-    {
       "id": "a9c8",
       "name": "Ada Lovelace",
       "number": "79991234561"
@@ -19,6 +9,16 @@
       "id": "3566",
       "name": "Mary Poppendieck",
       "number": "79991234562"
+    },
+    {
+      "id": "dd2c",
+      "name": "Galadriel",
+      "number": "79991234563"
+    },
+    {
+      "id": "e3df",
+      "name": "Dan Abramov",
+      "number": "79991234564"
     }
   ]
 }

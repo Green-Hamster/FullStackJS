@@ -119,7 +119,15 @@ const App = () => {
       console.log('changingPerson', changingPerson);
       if (window.confirm(`${changingPerson.name} is already added to phonebook, replace the old number with a new one?`))
       changingPerson.number = newNumber
-      personService.changeNumber(changingPerson)
+      personService.changeNumber(changingPerson).catch(error => {
+        setMessage(`Information about ${changingPerson.name} has already been removed from server`)
+        setTypeMessage('error')
+        setTimeout(() => {
+          setMessage(null);
+          setTypeMessage(null)
+        }, 5000)
+        
+      })
       setNewName('')
       setNewNumber('')
       setMessage(`${changingPerson.name} number replace succesfull!`)

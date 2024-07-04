@@ -18,7 +18,7 @@ const deletePerson = (id) => {
 
 
 const changeNumber = (personObject) => {
-    axios.put(`${baseUrl}/${personObject.id}`, personObject)
+   return axios.put(`${baseUrl}/${personObject.id}`, personObject)
 }
 
 
