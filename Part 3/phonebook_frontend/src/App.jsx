@@ -91,7 +91,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
-  const [message, setMessage] = useState('some error happened...')
+  const [message, setMessage] = useState('')
   const [typeMessage, setTypeMessage] = useState('')
 
  const hook = () => {
@@ -116,7 +116,6 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     } else if (persons.some(checkNumber)) {
       const changingPerson = persons.find(item => item.name == newName)
-      console.log('changingPerson', changingPerson);
       if (window.confirm(`${changingPerson.name} is already added to phonebook, replace the old number with a new one?`))
       changingPerson.number = newNumber
       personService.changeNumber(changingPerson).catch(error => {
@@ -151,6 +150,10 @@ const App = () => {
         setMessage(null);
         setTypeMessage(null)
       }, 5000)
+      })
+      .catch(error => {
+        setMessage(error.response.data.error)
+        setTypeMessage('error')
       })
     }
   }
