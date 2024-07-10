@@ -1,5 +1,5 @@
 {
-  "name": "notes_fullstack",
+  "name": "bloglist_fullstack",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -25,3 +25,4 @@
   },
   "description": ""
 }
+
