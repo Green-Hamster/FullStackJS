@@ -127,6 +127,36 @@ const App = () => {
     }
   }
 
+
+  const deleteBlog = async (id, title, author) => {
+    try {
+      // Вызов сервиса для удаления блога по ID
+      if (window.confirm(`Remoove blog ${title} by ${author}`)) {
+        await blogService.del(id)
+      }
+
+      // Обновляем список блогов, исключая удалённый блог
+      setBlogs(blogs.filter(blog => blog.id !== id))
+
+      // Устанавливаем сообщение об успешном удалении
+      setClassMessage('success')
+      setMessage('Blog deleted successfully')
+      setTimeout(() => {
+        setClassMessage(null)
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      // Обработка ошибок и отображение сообщения
+      setClassMessage('error')
+      setMessage(exception.message)
+      setTimeout(() => {
+        setClassMessage(null)
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
+
   const addBlogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog}/>
@@ -158,7 +188,7 @@ const App = () => {
           <button onClick={logOut}>log out</button>
           {addBlogForm()}
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} addLike={updateBlog} />
+            <Blog key={blog.id} blog={blog} addLike={updateBlog} deleteBlog={deleteBlog} user={user} />
           )}
         </div>
       }
