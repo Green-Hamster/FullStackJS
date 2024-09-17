@@ -21,7 +21,8 @@ const create = async newObject => {
 
 
   const response = await axios.post(baseUrl, newObject, config)
-  return response.data
+  const createdBlog = await axios.get(`${baseUrl}/${response.data.id}`)
+  return createdBlog.data
 }
 
 const update = async (id, newObject) => {

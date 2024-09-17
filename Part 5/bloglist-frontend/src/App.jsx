@@ -87,21 +87,19 @@ const App = () => {
   )
 
 
-  const addBlog = (blogObject) => {
+  const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
 
     try {
-      blogService
-        .create(blogObject)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          setClassMessage('success')
-          setMessage(`a new Blog ${blogObject.title} by ${blogObject.author} added`)
-          setTimeout(() => {
-            setClassMessage(null)
-            setMessage(null)
-          }, 5000)
-        })
+      const returnedBlog = await blogService.create(blogObject)
+      console.log('returnedBlog', returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setClassMessage('success')
+      setMessage(`a new Blog ${blogObject.title} by ${blogObject.author} added`)
+      setTimeout(() => {
+        setClassMessage(null)
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
       setClassMessage('error')
       setMessage(exception)
@@ -131,7 +129,7 @@ const App = () => {
   const deleteBlog = async (id, title, author) => {
     try {
       // Вызов сервиса для удаления блога по ID
-      if (window.confirm(`Remoove blog ${title} by ${author}`)) {
+      if (window.confirm(`Remove blog ${title} by ${author}?`)) {
         await blogService.del(id)
       }
 
